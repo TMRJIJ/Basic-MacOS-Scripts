@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>526</string>
+	<key>AMApplicationVersion</key>
+	<string>2.10</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0.2</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run AppleScript.action</string>
+				<key>ActionName</key>
+				<string>Run AppleScript</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>source</key>
+					<string>on run {input, parameters}    -- Initialize counters    set totalFolders to count of input    set processedFolders to 0        -- Process all selected folders    repeat with eachFolder in input        set processedFolders to processFolderRecursively(eachFolder, processedFolders)        updateProgress(processedFolders, totalFolders)    end repeat        display dialog "Processing complete!" buttons {"OK"} default button "OK"end runon processFolderRecursively(currentFolder, processedFolders)    set theFolder to POSIX path of (currentFolder as alias)        -- Get all subfolders and files in one call to Finder    tell application "Finder"        set subfolders to folders of folder (POSIX file theFolder as alias)        set imageFiles to files of folder (POSIX file theFolder as alias) whose name extension is in {"jpg", "png", "jpeg", "gif"}    end tell        -- If image files are found, process the first one    if (count of imageFiles) &gt; 0 then        set imageFile to item 1 of imageFiles        set imagePath to POSIX path of (imageFile as alias)                -- Apply the image as the folder icon        do shell script "sips -i " &amp; quoted form of imagePath        do shell script "DeRez -only icns " &amp; quoted form of imagePath &amp; " &gt; /tmp/tempicns.rsrc"        do shell script "Rez -append /tmp/tempicns.rsrc -o " &amp; quoted form of (theFolder &amp; "/Icon\r")        do shell script "SetFile -a C " &amp; quoted form of theFolder        do shell script "rm /tmp/tempicns.rsrc"    end if        -- Increment processed folder count    set processedFolders to processedFolders + 1        -- Process each subfolder recursively    repeat with subfolder in subfolders        set processedFolders to processFolderRecursively(subfolder, processedFolders)    end repeat        return processedFoldersend processFolderRecursivelyon updateProgress(processedFolders, totalFolders)    -- Update progress less frequently (every 10 folders)    if (processedFolders mod 10) = 0 or processedFolders = totalFolders then        set progressPercentage to (processedFolders / totalFolders) * 100        set progressMessage to "Processing " &amp; processedFolders &amp; " of " &amp; totalFolders &amp; " folders (" &amp; progressPercentage as string &amp; "% done)"                -- Display progress dialog        display dialog progressMessage buttons {"OK"} giving up after 1    end ifend updateProgress</string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.RunScript</string>
+				<key>CFBundleVersion</key>
+				<string>1.0.2</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunScriptAction</string>
+				<key>InputUUID</key>
+				<string>6832BCFB-3D08-402D-AA00-7A7D69C6C976</string>
+				<key>Keywords</key>
+				<array>
+					<string>Run</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>C1235892-F37F-465A-A634-C7CBCEA847BF</string>
+				<key>UUID</key>
+				<string>3ED85A63-92AC-4F3D-AD15-1FF508FABCC5</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<string>on run {input, parameters}
+	
+	(* Your script goes here *)
+	
+	return input
+end run</string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<integer>1</integer>
+				<key>location</key>
+				<string>427.500000:368.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict/>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>applicationBundleID</key>
+		<string>com.apple.finder</string>
+		<key>applicationBundleIDsByPath</key>
+		<dict>
+			<key>/System/Library/CoreServices/Finder.app</key>
+			<string>com.apple.finder</string>
+		</dict>
+		<key>applicationPath</key>
+		<string>/System/Library/CoreServices/Finder.app</string>
+		<key>applicationPaths</key>
+		<array>
+			<string>/System/Library/CoreServices/Finder.app</string>
+		</array>
+		<key>inputTypeIdentifier</key>
+		<string>com.apple.Automator.fileSystemObject.folder</string>
+		<key>outputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>presentationMode</key>
+		<integer>15</integer>
+		<key>processesInput</key>
+		<false/>
+		<key>serviceApplicationBundleID</key>
+		<string>com.apple.finder</string>
+		<key>serviceApplicationPath</key>
+		<string>/System/Library/CoreServices/Finder.app</string>
+		<key>serviceInputTypeIdentifier</key>
+		<string>com.apple.Automator.fileSystemObject.folder</string>
+		<key>serviceOutputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>serviceProcessesInput</key>
+		<false/>
+		<key>systemImageName</key>
+		<string>NSActionTemplate</string>
+		<key>useAutomaticInputType</key>
+		<false/>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.servicesMenu</string>
+	</dict>
+</dict>
+</plist>
